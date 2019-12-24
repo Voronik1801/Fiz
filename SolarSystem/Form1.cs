@@ -20,16 +20,21 @@ namespace SolarSystem
     {
         OpenGL gl;
         float planetDt = 0;//Количество пройденных дней 
-        double dt = 10.0d;
+        double dt = -10000.0d;
         float day;
+        bool b = true, t__ = true;
+        double V = 10000000;
+        double normalVector = 100000000000;
         const float hour = 0.04167f;//Движение в час 1/24
         int view = 25;//Угол обзора
         int positionX = 7;
-        int positionY = 3;
-        int positionZ = 0;
+        int positionY = -10;
+        int positionZ = 30;
         bool rotate_cam = false;//Вращать камеру по кругу?   
         bool pause = true;//Пауза                          
         bool isAster = true;
+        double normalVector_before;
+        int koef = 3;
 
         float rotate_cam_Angle = 0.0f;
 
@@ -133,6 +138,10 @@ namespace SolarSystem
             p.vy = Convert.ToDouble(velosityY.Text);
             p.vz = Convert.ToDouble(velosityZ.Text);
 
+            //positionX = Convert.ToInt32(textBox5.Text);
+            //positionZ = Convert.ToInt32(textBox7.Text);
+            //positionY = Convert.ToInt32(velosityX.Text);
+
             //startVelocity = Convert.ToDouble(textBox5.Text);
             //distanceOb = Convert.ToDouble(textBox2.Text);
             //distanceOb = Convert.ToDouble(textBox2.Text);
@@ -212,113 +221,146 @@ namespace SolarSystem
 
 
                 gl.PopMatrix();
-               
+
             }
             else
             {
-                int koef = 0;
                 const float moonRP = 7.4194f;
                 const float hour = 0.04167f;
                 day += hour * 6;
-                if (koef == 0)// по элипсу?
+                V = Math.Sqrt(p.vx * p.vx + p.vy * p.vy + p.vz * p.vz);
+                normalVector_before = normalVector;
+                double c = Math.Sqrt(p.x * p.x + p.y * p.y + p.z * p.z);
+                if (c != 0)
+                    normalVector = c;
+                if (normalVector > normalVector_before && b)
                 {
-                   
-                    gl.PushMatrix();
-                    gl.Rotate(moonRP * day, 0, 1, 1);//Вокруг солнца
-                    gl.Translate(positionX, positionY, positionZ);
-                    gl.Color(0.8235f, 0.7373f, 0.6824f, 1f);
-                    
-                    TAsteroid.Bind(gl);
-                    gl.Sphere(QAsteroid, 0.12f, 25, 25);
-                    gl.PopMatrix();
+                    V = Math.Sqrt(p.vx * p.vx + p.vy * p.vy + p.vz * p.vz);
+                    double V1, V2;
+                    V1 = Math.Sqrt(gravity * planetMass / normalVector) * 1000000;
+                    V2 = Math.Sqrt(2 * gravity * planetMass / normalVector) * 1000000;
+                    if (V < V1)
+                        koef = 1;
+                    if (V > V1 && V < V2)
+                        koef = 2;
+                    if (V > V2)
+                        koef = 3;
+                    b = false;
                 }
-                else
+                switch (koef)
                 {
-                    p.x = positionX * distance;
-                    p.y = positionY * distance;
-                    p.z = positionZ * distance;
-                    CalcForces1();
-                    MoveParticlesAndFreeForces();
-                    //gl.Translate(p.x,p.y, p.z);
+                    case 1:// окружность
+                        if (t__)
+                        {
+                            view = 30;
+                            t__ = false;
+                        }
+                        gl.PushMatrix();
+                        gl.Rotate(moonRP * day, 0, 1, 1);//Вокруг солнца
+                        gl.Translate(positionX, positionY, positionZ);
+                        gl.Color(0.8235f, 0.7373f, 0.6824f, 1f);
 
-                    double normalVector = Math.Sqrt(p.x * p.x + p.y * p.y + p.z * p.z);
+                        TAsteroid.Bind(gl);
+                        gl.Sphere(QAsteroid, 1.12f, 25, 25);
+                        gl.PopMatrix();
+                        break;
+                    case 2: // эллипс
+                        gl.PushMatrix();
+                        gl.Rotate(moonRP * day, 0, 1, 1);//Вокруг солнца
+                        gl.Translate(positionX, positionY, positionZ);
+                        gl.Color(0.8235f, 0.7373f, 0.6824f, 1f);
 
-                    double astPosX = p.x / normalVector * 10;
-                    double astPosY = p.y / normalVector * 10;
-                    double astPosZ = p.z / normalVector * 7;
+                        TAsteroid.Bind(gl);
+                        gl.Sphere(QAsteroid, 1.12f, 25, 25);
+                        gl.PopMatrix();
+                        break;
+                    case 3: // все остальное
+                        p.x = positionX * distance;
+                        p.y = positionY * distance;
+                        p.z = positionZ * distance;
+                        CalcForces1();
+                        MoveParticlesAndFreeForces();
+                        //gl.Translate(p.x,p.y, p.z);
 
-                    label26.Text = "p.x = " + p.x.ToString();
-                    label27.Text = "p.vx = " + p.vx.ToString();
-                    label28.Text = "f.x = " + f.x.ToString();
+                        double astPosX = p.x / normalVector * 10;
+                        double astPosY = p.y / normalVector * 10;
+                        double astPosZ = p.z / normalVector * 10;
 
-                    label29.Text = "p.x = " + p.x.ToString();
-                    label30.Text = "p.y = " + p.y.ToString();
-                    label31.Text = "p.z = " + p.z.ToString();
+                        gl.Translate(astPosX, astPosY, astPosZ);
+                        //        break;
+                        //}
+                        label26.Text = "p.x = " + p.x.ToString();
+                        label27.Text = "p.vx = " + p.vx.ToString();
+                        label28.Text = "f.x = " + f.x.ToString();
 
-                    label32.Text = "distance = " + normalVector;
+                        label29.Text = "p.x = " + p.x.ToString();
+                        label30.Text = "p.y = " + p.y.ToString();
+                        label31.Text = "p.z = " + p.z.ToString();
 
-                    gl.Translate(astPosX, astPosY, astPosZ);
+                        label32.Text = "distance = " + normalVector;
+                        label33.Text = "V = " + V;
+                        break;
+                }
+                gl.Color(0.8235f, 0.7373f, 0.6824f, 1f);
+                TAsteroid.Bind(gl);
+
+                gl.Rotate(-5000, 0, 0);//Вокруг себя
+                gl.Sphere(QAsteroid, 0.5f, 40, 50);
+                gl.PopMatrix();
+
+                gl.PopMatrix();
+                #endregion
+                void CalcForces1()
+                {
+                        double r = (1 / (p.x * p.x + p.y * p.y + p.z * p.z));
+                        double r_1 = Math.Sqrt(r);
+                        double fabs = gravity * asteroidMass * planetMass * r;
+
+                        if (fabs < fmax)
+                        {
+                            f.x = fabs * p.x * r_1;
+                            f.y = fabs * p.y * r_1;
+                            f.z = fabs * p.z * r_1;
+                        }
+                        else
+                        {
+                            fabs = fmax;
+                        }
+                }
+                void MoveParticlesAndFreeForces()
+                {
+                    double dvx = f.x * dt / asteroidMass;
+                    double dvy = f.y * dt / asteroidMass;
+                    double dvz = f.z * dt / asteroidMass;
+
+                    p.x += (p.vx + dvx / 2) * dt;
+                    p.y += (p.vy + dvy / 2) * dt;
+                    p.z += (p.vy + dvz / 2) * dt;
+
+                    p.vx += dvx;
+                    p.vy += dvy;
+                    p.vy += dvz;
+                }
+                gl.Disable(OpenGL.GL_LIGHT0);
+                gl.Disable(OpenGL.GL_LIGHTING);
+                gl.Disable(OpenGL.GL_DEPTH_TEST);
+                gl.Disable(OpenGL.GL_TEXTURE_2D);
+
+
+                if (!pause)
+                {
+                    try
+                    {
+                        planetDt += hour * 6;
+                    }
+                    catch (Exception)
+                    {
+                        planetDt = 0;
+                    }
                 }
             }
-            gl.Color(0.8235f, 0.7373f, 0.6824f, 1f);
-            TAsteroid.Bind(gl);
 
-            gl.Rotate(-5000, 0, 0);//Вокруг себя
-            gl.Sphere(QAsteroid, 0.5f, 40, 50);
-            gl.PopMatrix();
-
-            gl.PopMatrix();
-            #endregion
-            void CalcForces1()
-            {
-                double r = (1 / (p.x * p.x + p.y * p.y + p.z * p.z));
-                double r_1 = Math.Sqrt(r);
-                double fabs = gravity * asteroidMass * planetMass * r;
-
-                if (fabs < fmax)
-                {
-                    f.x = fabs * p.x * r_1;
-                    f.y = fabs * p.y * r_1;
-                    f.z = fabs * p.z * r_1;
-                }
-                else
-                {
-                    fabs = fmax;
-                }
-            }
-            void MoveParticlesAndFreeForces()
-            {
-                double dvx = f.x * dt / asteroidMass;
-                double dvy = f.y * dt / asteroidMass;
-                double dvz = f.z * dt / asteroidMass;
-
-                p.x += (p.vx + dvx / 2) * dt;
-                p.y += (p.vy + dvy / 2) * dt;
-                p.z += (p.vy + dvz / 2) * dt;
-
-                p.vx += dvx;
-                p.vy += dvy;
-                p.vy += dvz;
-            }
-            gl.Disable(OpenGL.GL_LIGHT0);
-            gl.Disable(OpenGL.GL_LIGHTING);
-            gl.Disable(OpenGL.GL_DEPTH_TEST);
-            gl.Disable(OpenGL.GL_TEXTURE_2D);
-
-
-            if (!pause)
-            { 
-                try
-                {
-                    planetDt += hour * 6;
-                }
-                catch (Exception)
-                {
-                    planetDt = 0;
-                }
-            }
         }
-
         private void Увеличить_Click(object sender, EventArgs e)
         {
             dt += 1;
@@ -405,6 +447,37 @@ namespace SolarSystem
         {
             if (isAster)
                 positionZ--;
+        }
+
+        private void label33_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void velosityY_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox5_TextChanged(object sender, EventArgs e)
+        {
+            //x
+        }
+
+        private void textBox7_TextChanged(object sender, EventArgs e)
+        {
+            //z
+     
+        }
+
+        private void velosityX_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox6_TextChanged(object sender, EventArgs e)
+        {
+
         }
 
         private void initlighting()

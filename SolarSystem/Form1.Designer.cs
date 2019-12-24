@@ -84,6 +84,11 @@
             this.label32 = new System.Windows.Forms.Label();
             this.velosityY = new System.Windows.Forms.TextBox();
             this.velosityZ = new System.Windows.Forms.TextBox();
+            this.button11 = new System.Windows.Forms.Button();
+            this.label33 = new System.Windows.Forms.Label();
+            this.textBox5 = new System.Windows.Forms.TextBox();
+            this.textBox7 = new System.Windows.Forms.TextBox();
+            this.textBox6 = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.openGLControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
@@ -521,6 +526,7 @@
             this.velosityX.Name = "velosityX";
             this.velosityX.Size = new System.Drawing.Size(39, 20);
             this.velosityX.TabIndex = 79;
+            this.velosityX.TextChanged += new System.EventHandler(this.velosityX_TextChanged);
             // 
             // label26
             // 
@@ -592,6 +598,7 @@
             this.velosityY.Name = "velosityY";
             this.velosityY.Size = new System.Drawing.Size(39, 20);
             this.velosityY.TabIndex = 89;
+            this.velosityY.TextChanged += new System.EventHandler(this.velosityY_TextChanged);
             // 
             // velosityZ
             // 
@@ -600,11 +607,58 @@
             this.velosityZ.Size = new System.Drawing.Size(39, 20);
             this.velosityZ.TabIndex = 90;
             // 
+            // button11
+            // 
+            this.button11.Location = new System.Drawing.Point(1152, 88);
+            this.button11.Name = "button11";
+            this.button11.Size = new System.Drawing.Size(37, 29);
+            this.button11.TabIndex = 64;
+            this.button11.Text = "+\r\n";
+            this.button11.UseVisualStyleBackColor = true;
+            this.button11.Click += new System.EventHandler(this.button5_Click);
+            // 
+            // label33
+            // 
+            this.label33.AutoSize = true;
+            this.label33.Location = new System.Drawing.Point(12, 337);
+            this.label33.Name = "label33";
+            this.label33.Size = new System.Drawing.Size(41, 13);
+            this.label33.TabIndex = 83;
+            this.label33.Tag = "";
+            this.label33.Text = "label26";
+            this.label33.Click += new System.EventHandler(this.label33_Click);
+            // 
+            // textBox5
+            // 
+            this.textBox5.Location = new System.Drawing.Point(895, 302);
+            this.textBox5.Name = "textBox5";
+            this.textBox5.Size = new System.Drawing.Size(39, 20);
+            this.textBox5.TabIndex = 79;
+            this.textBox5.TextChanged += new System.EventHandler(this.textBox5_TextChanged);
+            // 
+            // textBox7
+            // 
+            this.textBox7.Location = new System.Drawing.Point(1013, 302);
+            this.textBox7.Name = "textBox7";
+            this.textBox7.Size = new System.Drawing.Size(39, 20);
+            this.textBox7.TabIndex = 90;
+            this.textBox7.TextChanged += new System.EventHandler(this.textBox7_TextChanged);
+            // 
+            // textBox6
+            // 
+            this.textBox6.Location = new System.Drawing.Point(954, 302);
+            this.textBox6.Name = "textBox6";
+            this.textBox6.Size = new System.Drawing.Size(39, 20);
+            this.textBox6.TabIndex = 91;
+            this.textBox6.TextChanged += new System.EventHandler(this.textBox6_TextChanged);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1328, 613);
+            this.Controls.Add(this.textBox6);
+            this.Controls.Add(this.textBox7);
             this.Controls.Add(this.velosityZ);
             this.Controls.Add(this.velosityY);
             this.Controls.Add(this.label32);
@@ -613,9 +667,11 @@
             this.Controls.Add(this.label29);
             this.Controls.Add(this.label28);
             this.Controls.Add(this.label27);
+            this.Controls.Add(this.label33);
             this.Controls.Add(this.label26);
             this.Controls.Add(this.label24);
             this.Controls.Add(this.label25);
+            this.Controls.Add(this.textBox5);
             this.Controls.Add(this.velosityX);
             this.Controls.Add(this.label22);
             this.Controls.Add(this.label23);
@@ -630,6 +686,7 @@
             this.Controls.Add(this.button9);
             this.Controls.Add(this.button8);
             this.Controls.Add(this.button7);
+            this.Controls.Add(this.button11);
             this.Controls.Add(this.button6);
             this.Controls.Add(this.button5);
             this.Controls.Add(this.label15);
@@ -727,6 +784,11 @@
         private System.Windows.Forms.Label label32;
         private System.Windows.Forms.TextBox velosityY;
         private System.Windows.Forms.TextBox velosityZ;
+        private System.Windows.Forms.Button button11;
+        private System.Windows.Forms.Label label33;
+        private System.Windows.Forms.TextBox textBox5;
+        private System.Windows.Forms.TextBox textBox7;
+        private System.Windows.Forms.TextBox textBox6;
     }
 }
 
