@@ -257,7 +257,8 @@ namespace SolarSystem
                         }
                         gl.PushMatrix();
                         gl.Rotate(moonRP * day, 0, 1, 1);//Вокруг солнца
-                        gl.Translate(positionX, positionY, positionZ);
+                        double g = Math.Sqrt(positionX * positionX + positionY * positionY + positionZ * positionZ);
+                        gl.Translate(positionX/g * 7, positionY/ g * 7, positionZ/g * 7);
                         gl.Color(0.8235f, 0.7373f, 0.6824f, 1f);
 
                         TAsteroid.Bind(gl);
